@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    border-color: #e2e8f0;
+  }
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+  }
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Clean light scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Leaflet clean light mode */
+.leaflet-container {
+  background: #f8fafc !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  z-index: 10;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  color: #1e293b !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+}
+
+.leaflet-popup-tip {
+  background: #ffffff !important;
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px !important;
+  line-height: 1.4 !important;
+}
+
+/* Custom Marker Styling */
+.billboard-marker-wrapper {
+  background: transparent;
+  border: none;
+}
+
+.billboard-marker-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: white;
+  border: 2px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.billboard-marker-pin:hover {
+  transform: scale(1.18) translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  z-index: 999 !important;
+}
+
+.billboard-marker-pin.tinggi {
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  color: white;
+}
+
+.billboard-marker-pin.sedang {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+.billboard-marker-pin.rendah {
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  color: white;
+}
+
+/* Pulsing halo effect for high traffic billboard */
+.billboard-marker-pin.tinggi::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 2px solid #ef4444;
+  opacity: 0.75;
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Custom Marker Clustering Styling */
+.custom-cluster-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-weight: 800;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 2.5px solid #3b82f6;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25), 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.custom-cluster-marker:hover {
+  transform: scale(1.12);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
+}
+
+.custom-cluster-marker.cluster-small {
+  width: 38px;
+  height: 38px;
+  font-size: 13px;
+  border-color: #3b82f6;
+  background: radial-gradient(circle at center, #ffffff 40%, #eff6ff 100%);
+}
+
+.custom-cluster-marker.cluster-medium {
+  width: 44px;
+  height: 44px;
+  font-size: 14px;
+  border-color: #2563eb;
+  background: radial-gradient(circle at center, #ffffff 30%, #dbeafe 100%);
+}
+
+.custom-cluster-marker.cluster-large {
+  width: 50px;
+  height: 50px;
+  font-size: 15px;
+  border-color: #1d4ed8;
+  background: radial-gradient(circle at center, #ffffff 20%, #bfdbfe 100%);
+}
+
+/* Tooltip Custom styling */
+.leaflet-tooltip.custom-map-tooltip {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 6px 10px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+.leaflet-tooltip.custom-map-tooltip::before {
+  border-top-color: #ffffff !important;
+}
