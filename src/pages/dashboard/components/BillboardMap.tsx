@@ -200,7 +200,14 @@ export const BillboardMap: React.FC<BillboardMapProps> = ({
 
       // Popup content
       const popupHtml = `
-        <div style="min-width:210px;font-family:'Plus Jakarta Sans',sans-serif;">
+        <div style="min-width:220px;font-family:'Plus Jakarta Sans',sans-serif;">
+          ${
+            b.foto
+              ? `<div style="margin:-12px -14px 8px -14px;height:100px;overflow:hidden;border-radius:14px 14px 0 0;">
+                   <img src="${b.foto}" alt="${b.nama}" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                 </div>`
+              : ''
+          }
           <div style="display:flex;align-items:center;justify-content:between;gap:6px;margin-bottom:6px;">
             <span style="font-family:monospace;font-size:10px;font-weight:700;background:#eff6ff;color:#1d4ed8;padding:2px 6px;border-radius:4px;border:1px solid #bfdbfe;">
               ${b.id}

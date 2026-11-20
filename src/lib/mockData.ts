@@ -6,6 +6,7 @@ import {
   TrafficLevel,
   TingkatPendapatan 
 } from '../types';
+import billboardPhotoSample from '../assets/billboard-photo-sample.png';
 
 // Deterministic Pseudo-Random Generator (Seed-based)
 function createPRNG(initialSeed: number) {
@@ -160,7 +161,7 @@ function generateBillboards(): Billboard[] {
         levelTraffic: spot.level,
         tipe: spot.tipe,
         ukuran: spot.ukuran,
-        foto: `https://images.unsplash.com/photo-${1519501025264 + (idx * 1792)}?auto=format&fit=crop&w=800&q=80`,
+        foto: billboardPhotoSample,
         arahPandang: `Menghadap arus utama ${spot.street}`
       });
     });

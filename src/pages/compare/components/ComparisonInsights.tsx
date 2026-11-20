@@ -1,6 +1,6 @@
 import React from 'react';
 import { BillboardCompareData, COMPARE_COLORS } from '../utils/compareCalculations';
-import { Sparkles, TrendingUp, Award, Footprints, Car, Target, CheckCircle2 } from 'lucide-react';
+import { TrendingUp, Award, Footprints, Car, Target, CheckCircle2 } from 'lucide-react';
 
 interface ComparisonInsightsProps {
   billboardsData: BillboardCompareData[];
@@ -34,7 +34,7 @@ export const ComparisonInsights: React.FC<ComparisonInsightsProps> = ({ billboar
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
-            <Sparkles className="w-4 h-4" />
+            <Award className="w-4 h-4" />
           </div>
           <div>
             <h3 className="text-sm font-bold text-slate-900">

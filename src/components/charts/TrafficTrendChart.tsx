@@ -19,6 +19,9 @@ export interface TrafficTrendChartProps {
   showControls?: boolean;
   compact?: boolean;
   className?: string;
+  /** When false, hides per-vehicle-category breakdown and shows only the aggregate total
+   *  (used for the "Tanpa CCTV" demo mode, which has no per-vehicle classification). */
+  showCategoryBreakdown?: boolean;
 }
 
 export const TrafficTrendChart: React.FC<TrafficTrendChartProps> = ({
@@ -26,8 +29,13 @@ export const TrafficTrendChart: React.FC<TrafficTrendChartProps> = ({
   height = 320,
   showControls = true,
   compact = false,
-  className = ''
+  className = '',
+  showCategoryBreakdown = true
 }) => {
+  // Pre-compute aggregate total per record for the simplified (non-CCTV) view
+  const chartData = showCategoryBreakdown
+    ? data
+    : data.map((r) => ({ ...r, total: r.total ?? (r.motor + r.mobil + r.pejalanKaki + r.truk) }));
   const [chartType, setChartType] = useState<'area' | 'bar'>('area');
   const [activeSeries, setActiveSeries] = useState<{
     motor: boolean;
@@ -119,6 +127,7 @@ export const TrafficTrendChart: React.FC<TrafficTrendChartProps> = ({
       {showControls && (
         <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-100">
           {/* Category Filter Pills */}
+          {showCategoryBreakdown ? (
           <div className="flex flex-wrap items-center gap-1.5 text-xs">
             <span className="text-slate-400 text-[11px] font-medium mr-1 hidden sm:inline">Kategori:</span>
             
@@ -174,6 +183,12 @@ export const TrafficTrendChart: React.FC<TrafficTrendChartProps> = ({
               Truk & Bus
             </button>
           </div>
+          ) : (
+            <div className="text-[11px] font-semibold text-slate-500 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-blue-500" />
+              Total Volume Lalu Lintas (semua moda)
+            </div>
+          )}
 
           {/* Chart Type Selector */}
           {!compact && (
@@ -209,7 +224,7 @@ export const TrafficTrendChart: React.FC<TrafficTrendChartProps> = ({
       <div style={{ width: '100%', height }}>
         <ResponsiveContainer width="100%" height="100%">
           {chartType === 'area' ? (
-            <AreaChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorMotor" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
@@ -246,53 +261,67 @@ export const TrafficTrendChart: React.FC<TrafficTrendChartProps> = ({
               <Tooltip content={<CustomTooltip />} />
               {compact && <Legend wrapperStyle={{ fontSize: 11, paddingTop: 6 }} />}
 
-              {activeSeries.motor && (
+              {showCategoryBreakdown ? (
+                <>
+                  {activeSeries.motor && (
+                    <Area
+                      type="monotone"
+                      dataKey="motor"
+                      name="Sepeda Motor"
+                      stroke="#10b981"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorMotor)"
+                    />
+                  )}
+                  {activeSeries.mobil && (
+                    <Area
+                      type="monotone"
+                      dataKey="mobil"
+                      name="Mobil Penumpang"
+                      stroke="#3b82f6"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorMobil)"
+                    />
+                  )}
+                  {activeSeries.pejalanKaki && (
+                    <Area
+                      type="monotone"
+                      dataKey="pejalanKaki"
+                      name="Pejalan Kaki"
+                      stroke="#f59e0b"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorPejalan)"
+                    />
+                  )}
+                  {activeSeries.truk && (
+                    <Area
+                      type="monotone"
+                      dataKey="truk"
+                      name="Truk & Bus"
+                      stroke="#8b5cf6"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorTruk)"
+                    />
+                  )}
+                </>
+              ) : (
                 <Area
                   type="monotone"
-                  dataKey="motor"
-                  name="Sepeda Motor"
-                  stroke="#10b981"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorMotor)"
-                />
-              )}
-              {activeSeries.mobil && (
-                <Area
-                  type="monotone"
-                  dataKey="mobil"
-                  name="Mobil Penumpang"
-                  stroke="#3b82f6"
-                  strokeWidth={2}
+                  dataKey="total"
+                  name="Total Volume Lalu Lintas"
+                  stroke="#2563eb"
+                  strokeWidth={2.5}
                   fillOpacity={1}
                   fill="url(#colorMobil)"
                 />
               )}
-              {activeSeries.pejalanKaki && (
-                <Area
-                  type="monotone"
-                  dataKey="pejalanKaki"
-                  name="Pejalan Kaki"
-                  stroke="#f59e0b"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorPejalan)"
-                />
-              )}
-              {activeSeries.truk && (
-                <Area
-                  type="monotone"
-                  dataKey="truk"
-                  name="Truk & Bus"
-                  stroke="#8b5cf6"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorTruk)"
-                />
-              )}
             </AreaChart>
           ) : (
-            <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+            <BarChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
               <XAxis
                 dataKey="tanggal"
@@ -310,17 +339,23 @@ export const TrafficTrendChart: React.FC<TrafficTrendChartProps> = ({
               <Tooltip content={<CustomTooltip />} />
               {compact && <Legend wrapperStyle={{ fontSize: 11, paddingTop: 6 }} />}
 
-              {activeSeries.motor && (
-                <Bar dataKey="motor" name="Sepeda Motor" fill="#10b981" radius={[4, 4, 0, 0]} />
-              )}
-              {activeSeries.mobil && (
-                <Bar dataKey="mobil" name="Mobil Penumpang" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              )}
-              {activeSeries.pejalanKaki && (
-                <Bar dataKey="pejalanKaki" name="Pejalan Kaki" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-              )}
-              {activeSeries.truk && (
-                <Bar dataKey="truk" name="Truk & Bus" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+              {showCategoryBreakdown ? (
+                <>
+                  {activeSeries.motor && (
+                    <Bar dataKey="motor" name="Sepeda Motor" fill="#10b981" radius={[4, 4, 0, 0]} />
+                  )}
+                  {activeSeries.mobil && (
+                    <Bar dataKey="mobil" name="Mobil Penumpang" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                  )}
+                  {activeSeries.pejalanKaki && (
+                    <Bar dataKey="pejalanKaki" name="Pejalan Kaki" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                  )}
+                  {activeSeries.truk && (
+                    <Bar dataKey="truk" name="Truk & Bus" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                  )}
+                </>
+              ) : (
+                <Bar dataKey="total" name="Total Volume Lalu Lintas" fill="#2563eb" radius={[4, 4, 0, 0]} />
               )}
             </BarChart>
           )}

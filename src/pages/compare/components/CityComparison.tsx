@@ -26,7 +26,6 @@ import {
   TrendingUp,
   BarChart3,
   MapPin,
-  Sparkles,
   Award,
   Layers,
   Bike,
@@ -155,7 +154,7 @@ export const CityComparison: React.FC<CityComparisonProps> = ({ timeFilter }) =>
           {/* Quick Presets */}
           <div className="flex flex-wrap items-center gap-1.5 text-xs">
             <span className="text-slate-400 font-medium mr-1 flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600" /> Preset:
+              Preset:
             </span>
             <button
               onClick={() => applyPreset(['Jakarta', 'Surabaya'])}

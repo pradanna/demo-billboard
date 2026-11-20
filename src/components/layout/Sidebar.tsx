@@ -5,11 +5,7 @@ import {
   MapPin, 
   Layers, 
   FileText, 
-  Settings, 
-  Radio, 
-  Activity,
-  ShieldCheck,
-  Target
+  Radio
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -17,29 +13,6 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ totalBillboardsCount = 33 }) => {
-  const navItems = [
-    {
-      section: 'MONITORING & PETA',
-      items: [
-        { to: '/dashboard', label: 'Dashboard & Peta', icon: LayoutDashboard },
-        { to: '/billboard', label: 'Daftar Billboard', icon: MapPin, count: totalBillboardsCount },
-      ]
-    },
-    {
-      section: 'ANALISIS & MEDIA',
-      items: [
-        { to: '/compare', label: 'Perbandingan Titik', icon: Layers },
-        { to: '/reports', label: 'Laporan & Export', icon: FileText },
-      ]
-    },
-    {
-      section: 'PENGATURAN',
-      items: [
-        { to: '/settings', label: 'Pengaturan Sistem', icon: Settings },
-      ]
-    }
-  ];
-
   return (
     <aside className="w-64 bg-white border-r border-slate-200/90 shrink-0 hidden lg:flex flex-col min-h-screen">
       
@@ -58,39 +31,90 @@ export const Sidebar: React.FC<SidebarProps> = ({ totalBillboardsCount = 33 }) =
         </div>
       </div>
 
-      {/* Navigation Links */}
+      {/* Navigation Sections */}
       <div className="flex-1 px-4 py-5 space-y-6 overflow-y-auto">
-        {navItems.map((sec, idx) => (
-          <div key={idx} className="space-y-1">
-            <div className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-              {sec.section}
-            </div>
-
-            {sec.items.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  `w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                    isActive
-                      ? 'bg-blue-50 text-blue-600 shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`
-                }
-              >
-                <div className="flex items-center gap-2.5">
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </div>
-                {item.count !== undefined && (
-                  <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
-                    {item.count}
-                  </span>
-                )}
-              </NavLink>
-            ))}
+        
+        {/* Section 1: Monitoring */}
+        <div className="space-y-1">
+          <div className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+            Monitoring & Peta
           </div>
-        ))}
+
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) =>
+              `w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                isActive
+                  ? 'bg-blue-50 text-blue-600 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`
+            }
+          >
+            <div className="flex items-center gap-2.5">
+              <LayoutDashboard className="w-4 h-4" />
+              <span>Dashboard & Peta</span>
+            </div>
+          </NavLink>
+
+          <NavLink
+            to="/billboard"
+            className={({ isActive }) =>
+              `w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                isActive
+                  ? 'bg-blue-50 text-blue-600 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`
+            }
+          >
+            <div className="flex items-center gap-2.5">
+              <MapPin className="w-4 h-4" />
+              <span>Daftar Billboard</span>
+            </div>
+            <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+              {totalBillboardsCount}
+            </span>
+          </NavLink>
+        </div>
+
+        {/* Section 2: Analysis & Media */}
+        <div className="space-y-1">
+          <div className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+            Analisis & Media
+          </div>
+
+          <NavLink
+            to="/compare"
+            className={({ isActive }) =>
+              `w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                isActive
+                  ? 'bg-blue-50 text-blue-600 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`
+            }
+          >
+            <div className="flex items-center gap-2.5">
+              <Layers className="w-4 h-4" />
+              <span>Perbandingan Titik</span>
+            </div>
+          </NavLink>
+
+          <NavLink
+            to="/reports"
+            className={({ isActive }) =>
+              `w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                isActive
+                  ? 'bg-blue-50 text-blue-600 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`
+            }
+          >
+            <div className="flex items-center gap-2.5">
+              <FileText className="w-4 h-4" />
+              <span>Laporan & Export</span>
+            </div>
+          </NavLink>
+        </div>
+
       </div>
 
       {/* User Role Profile Badge */}

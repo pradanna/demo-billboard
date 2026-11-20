@@ -21,7 +21,6 @@ import {
   BarChart3, 
   Users, 
   Layers, 
-  Sparkles,
   Bike,
   Car,
   Footprints,
@@ -110,7 +109,7 @@ export const BillboardComparison: React.FC<BillboardComparisonProps> = ({ timeFi
           {/* Quick Preset Buttons */}
           <div className="flex flex-wrap items-center gap-1.5 text-xs">
             <span className="text-slate-400 font-medium mr-1 flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600" /> Preset:
+              Preset:
             </span>
             <button
               onClick={() => applyPreset(['BB-001', 'BB-002'])}

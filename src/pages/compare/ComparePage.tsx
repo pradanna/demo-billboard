@@ -7,7 +7,6 @@ import {
   Layers, 
   Building2, 
   ArrowLeftRight,
-  Sparkles,
   FileText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -80,7 +79,6 @@ export const ComparePage: React.FC = () => {
         </div>
 
         <div className="text-[11px] text-slate-400 px-3 hidden lg:flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-amber-500" />
           <span>Mode aktif: <strong>{compareMode === 'billboard' ? 'Titik Spesifik' : 'Agregat Kota'}</strong></span>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Billboard, TimeFilter } from '../../../types';
 import { Card } from '../../../components/shared/Card';
-import { Bike, Car, Footprints, Truck, TrendingUp, Sparkles } from 'lucide-react';
+import { Bike, Car, Footprints, Truck, TrendingUp } from 'lucide-react';
 import { getTrafficByBillboard } from '../../../lib/mockData';
 
 interface KPISectionProps {

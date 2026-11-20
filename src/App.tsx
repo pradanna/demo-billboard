@@ -6,32 +6,39 @@ import { BillboardListPage } from './pages/billboard/BillboardListPage';
 import { BillboardDetailPage } from './pages/billboard/BillboardDetailPage';
 import { ComparePage } from './pages/compare/ComparePage';
 import { ReportsPage } from './pages/reports/ReportsPage';
+import { DemoModeProvider } from './lib/demoModeContext';
 
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<AppLayout />}>
-          {/* Default redirect to /dashboard */}
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          
-          {/* 10.1 Agent 1: Dashboard & Map View */}
-          <Route path="dashboard" element={<DashboardPage />} />
-          
-          {/* 10.2 Agent 2: Billboard List & Detail */}
-          <Route path="billboard" element={<BillboardListPage />} />
-          <Route path="billboard/:id" element={<BillboardDetailPage />} />
-          
-          {/* 10.3 Agent 3: Comparison */}
-          <Route path="compare" element={<ComparePage />} />
-          
-          {/* 10.4 Agent 4: Reports & Export */}
-          <Route path="reports" element={<ReportsPage />} />
+      <DemoModeProvider>
+        <Routes>
+          <Route path="/" element={<AppLayout />}>
+            {/* Default redirect to /dashboard */}
+            <Route index element={<Navigate to="/dashboard" replace />} />
 
-          {/* Catch-all redirect */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Route>
-      </Routes>
+            {/* 10.1 Agent 1: Dashboard & Map View */}
+            <Route path="dashboard" element={<DashboardPage />} />
+
+            {/* 10.2 Agent 2: Billboard List & Detail */}
+            <Route path="billboard" element={<BillboardListPage />} />
+            <Route path="billboard/:id" element={<BillboardDetailPage />} />
+
+            {/* 10.3 Agent 3: Comparison */}
+            <Route path="compare" element={<ComparePage />} />
+
+            {/* 10.4 Agent 4: Reports & Export */}
+            <Route path="reports" element={<ReportsPage />} />
+
+            {/* Demo mode entry links (set mode via DemoModeProvider, then land on dashboard) */}
+            <Route path="cctv" element={<Navigate to="/dashboard" replace />} />
+            <Route path="tanpa-cctv" element={<Navigate to="/dashboard" replace />} />
+
+            {/* Catch-all redirect */}
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Route>
+        </Routes>
+      </DemoModeProvider>
     </BrowserRouter>
   );
 };

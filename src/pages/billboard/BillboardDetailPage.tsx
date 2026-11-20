@@ -16,6 +16,9 @@ import {
 } from '../../components/charts';
 import { DemografiCard } from '../../components/shared/DemografiCard';
 import { ExportButton } from '../../components/shared/ExportButton';
+import { AIVisionModal } from '../../components/shared/AIVisionModal';
+import { PhotoGalleryModal } from '../../components/shared/PhotoGalleryModal';
+import { useDemoMode } from '../../lib/demoModeContext';
 import { TimeFilter } from '../../types';
 import {
   ArrowLeft,
@@ -36,10 +39,12 @@ import {
   Clock,
   TrendingUp,
   Compass,
-  Sparkles,
   BarChart3,
   PieChart as PieIcon,
-  Activity
+  Activity,
+  Scan,
+  Camera,
+  ShieldCheck
 } from 'lucide-react';
 
 export const BillboardDetailPage: React.FC = () => {
@@ -48,6 +53,10 @@ export const BillboardDetailPage: React.FC = () => {
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('mingguan');
   const [activeChartTab, setActiveChartTab] = useState<'trend' | 'composition' | 'hourly'>('trend');
   const [copied, setCopied] = useState(false);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+
+  const { isCctvEnabled } = useDemoMode();
 
   // Fallback to first billboard if invalid id
   const billboard = getBillboardById(id || '') || getBillboards()[0];
@@ -80,6 +89,7 @@ export const BillboardDetailPage: React.FC = () => {
   const gmapsUrl = `https://www.google.com/maps?q=${billboard.lat},${billboard.lng}`;
 
   return (
+    <>
     <div className="space-y-6">
       
       {/* Breadcrumbs & Navigation Bar */}
@@ -204,14 +214,37 @@ export const BillboardDetailPage: React.FC = () => {
               </span>
             </div>
 
-            <div className="absolute bottom-3 left-3 right-3 text-white">
-              <div className="text-[10px] uppercase font-semibold text-slate-300 tracking-wider">
-                Arah Sudut Pandang (Facing)
+            <div className="absolute bottom-3 left-3 right-3 text-white flex items-end justify-between gap-2">
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase font-semibold text-slate-300 tracking-wider">
+                  Arah Sudut Pandang (Facing)
+                </div>
+                <div className="text-xs sm:text-sm font-bold flex items-center gap-1.5 mt-0.5">
+                  <Compass className="w-4 h-4 text-blue-400 shrink-0" />
+                  <span className="truncate">{billboard.arahPandang || `Menghadap arus lalu lintas utama ${billboard.alamat}`}</span>
+                </div>
               </div>
-              <div className="text-xs sm:text-sm font-bold flex items-center gap-1.5 mt-0.5">
-                <Compass className="w-4 h-4 text-blue-400 shrink-0" />
-                <span>{billboard.arahPandang || `Menghadap arus lalu lintas utama ${billboard.alamat}`}</span>
-              </div>
+
+              {/* Dynamic Action Button depending on Demo Mode */}
+              {isCctvEnabled ? (
+                <button
+                  type="button"
+                  onClick={() => setIsAiModalOpen(true)}
+                  className="shrink-0 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-md transition-colors"
+                >
+                  <Scan className="w-3.5 h-3.5 animate-pulse" />
+                  <span>Live CCTV AI</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsPhotoModalOpen(true)}
+                  className="shrink-0 px-3 py-1.5 rounded-lg bg-white/95 hover:bg-white text-slate-800 text-xs font-bold flex items-center gap-1.5 shadow-md transition-colors"
+                >
+                  <Camera className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Foto & Sudut Pandang</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -219,6 +252,15 @@ export const BillboardDetailPage: React.FC = () => {
             <span>Visibilitas: <strong className="text-slate-800">200m+ Garis Lurus</strong></span>
             <span>Pencahayaan: <strong className="text-slate-800">24 Jam (LED Backlit)</strong></span>
           </div>
+
+          {!isCctvEnabled && (
+            <div className="px-3 py-2.5 bg-white border-t border-slate-100 flex items-start gap-2 text-[11px] text-slate-600">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+              <span>
+                <strong>Sumber Data:</strong> Aggregated Cellular Movement & GPS Mobility Telemetry. Diaudit berkala tanpa perekaman CCTV individu (UU PDP Compliant).
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Technical Specifications & Site Information (7 cols) */}
@@ -317,7 +359,7 @@ export const BillboardDetailPage: React.FC = () => {
       </Card>
 
       {/* Mode Traffic Metric Cards (Motor, Mobil, Pejalan Kaki, Truk, Total) */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3.5">
+      <div className={`grid grid-cols-2 gap-3.5 ${isCctvEnabled ? 'lg:grid-cols-5' : 'lg:grid-cols-3'}`}>
         
         {/* Total OTS */}
         <div className="col-span-2 lg:col-span-1 bg-slate-900 text-white rounded-2xl p-4 shadow-sm flex flex-col justify-between">
@@ -336,6 +378,8 @@ export const BillboardDetailPage: React.FC = () => {
           </div>
         </div>
 
+        {isCctvEnabled ? (
+        <>
         {/* Sepeda Motor */}
         <Card className="p-4 bg-emerald-50/40 border-emerald-100 flex flex-col justify-between">
           <div>
@@ -419,6 +463,18 @@ export const BillboardDetailPage: React.FC = () => {
             Rata-rata: <strong className="text-slate-800 font-mono">{Math.round(periodTotals.truk / days).toLocaleString('id-ID')}</strong> / hari
           </div>
         </Card>
+        </>
+        ) : (
+          <Card className="col-span-2 p-4 bg-blue-50/40 border-blue-100 flex flex-col justify-center">
+            <div className="flex items-center gap-2 text-xs font-semibold text-blue-800">
+              <Scan className="w-4 h-4 text-blue-600" />
+              Breakdown Per Jenis Kendaraan
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+              Klasifikasi motor / mobil / pejalan kaki / truk membutuhkan deteksi visual (AI CCTV). Mode geospasial ini hanya menyediakan estimasi total volume pergerakan.
+            </p>
+          </Card>
+        )}
 
       </div>
 
@@ -455,18 +511,20 @@ export const BillboardDetailPage: React.FC = () => {
                   <span>Tren Waktu</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => setActiveChartTab('composition')}
-                  className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all cursor-pointer ${
-                    activeChartTab === 'composition'
-                      ? 'bg-white text-blue-600 shadow-xs'
-                      : 'hover:text-slate-900'
-                  }`}
-                >
-                  <PieIcon className="w-3.5 h-3.5" />
-                  <span>Komposisi</span>
-                </button>
+                {isCctvEnabled && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveChartTab('composition')}
+                    className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all cursor-pointer ${
+                      activeChartTab === 'composition'
+                        ? 'bg-white text-blue-600 shadow-xs'
+                        : 'hover:text-slate-900'
+                    }`}
+                  >
+                    <PieIcon className="w-3.5 h-3.5" />
+                    <span>Komposisi</span>
+                  </button>
+                )}
 
                 <button
                   type="button"
@@ -490,6 +548,7 @@ export const BillboardDetailPage: React.FC = () => {
                   data={trafficRecords}
                   height={320}
                   showControls={true}
+                  showCategoryBreakdown={isCctvEnabled}
                 />
                 <div className="p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs text-slate-500 flex items-center justify-between">
                   <span>💡 Tip: Klik label kategori di atas grafik untuk menyembunyikan atau menampilkan moda tertentu.</span>
@@ -498,7 +557,7 @@ export const BillboardDetailPage: React.FC = () => {
               </div>
             )}
 
-            {activeChartTab === 'composition' && (
+            {activeChartTab === 'composition' && isCctvEnabled && (
               <div className="space-y-4 pt-2">
                 <TrafficCategoryDonut
                   records={trafficRecords}
@@ -539,7 +598,7 @@ export const BillboardDetailPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4 mb-5">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-blue-500/20 border border-blue-400/30 text-blue-300">
-              <Sparkles className="w-5 h-5" />
+              <TrendingUp className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-base font-bold text-white tracking-tight">
@@ -628,5 +687,17 @@ export const BillboardDetailPage: React.FC = () => {
       </Card>
 
     </div>
+
+    <AIVisionModal
+      billboard={billboard}
+      isOpen={isAiModalOpen}
+      onClose={() => setIsAiModalOpen(false)}
+    />
+    <PhotoGalleryModal
+      billboard={billboard}
+      isOpen={isPhotoModalOpen}
+      onClose={() => setIsPhotoModalOpen(false)}
+    />
+    </>
   );
 };

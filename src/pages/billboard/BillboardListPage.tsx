@@ -21,7 +21,6 @@ import {
   Footprints,
   Truck,
   RotateCcw,
-  Sparkles,
   Layers
 } from 'lucide-react';
 

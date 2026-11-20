@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Billboard } from '../../../types';
-import { Search, MapPin, ChevronRight, Eye, Sparkles } from 'lucide-react';
+import { Search, MapPin, ChevronRight, Eye } from 'lucide-react';
 import { TrafficBadge } from '../../../components/shared/TrafficBadge';
 
 interface BillboardQuickExplorerProps {

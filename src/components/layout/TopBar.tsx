@@ -1,6 +1,7 @@
 import React from 'react';
-import { Search, Bell, MapPin, Radio, Menu } from 'lucide-react';
+import { Search, Bell, MapPin, Menu, Scan, Eye } from 'lucide-react';
 import { getAllCities } from '../../lib/mockData';
+import { useDemoMode } from '../../lib/demoModeContext';
 
 interface TopBarProps {
   title?: string;
@@ -16,9 +17,10 @@ export const TopBar: React.FC<TopBarProps> = ({
   onToggleMobileMenu
 }) => {
   const cities = ["Semua", ...getAllCities()];
+  const { mode, setMode } = useDemoMode();
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-slate-200/90 px-4 sm:px-6 py-3">
+    <header className="sticky top-0 z-30 bg-white border-b border-slate-200/90 px-4 sm:px-6 py-2.5">
       <div className="flex items-center justify-between gap-4">
         
         {/* Left: Mobile Toggle & Title */}
@@ -37,23 +39,50 @@ export const TopBar: React.FC<TopBarProps> = ({
           </div>
 
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-              {title}
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <span>{title}</span>
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                mode === 'tanpa-cctv'
+                  ? 'bg-slate-100 text-slate-700 border-slate-200'
+                  : 'bg-blue-50 text-blue-700 border-blue-200'
+              }`}>
+                {mode === 'tanpa-cctv' ? 'Mode: Standar (Tanpa CCTV)' : 'Mode: AI CCTV Live'}
+              </span>
             </h2>
           </div>
         </div>
 
-        {/* Right: Search, Filter, Notification & Profile */}
+        {/* Right: Mode Switcher, Search, Filter, Notification & Profile */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           
-          {/* Search Pill */}
-          <div className="relative hidden md:block w-56 lg:w-64">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Cari titik billboard, kota..."
-              className="w-full bg-slate-50 border border-slate-200 rounded-full pl-9 pr-4 py-1.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
-            />
+          {/* Demo Mode Switcher (Pill Toggle) */}
+          <div className="hidden sm:flex items-center bg-slate-100 p-0.5 rounded-full border border-slate-200 text-xs">
+            <button
+              type="button"
+              onClick={() => setMode('tanpa-cctv')}
+              className={`px-3 py-1 rounded-full font-bold flex items-center gap-1.5 transition-all ${
+                mode === 'tanpa-cctv'
+                  ? 'bg-white text-slate-900 shadow-xs'
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+              title="Demo versi standar: fokus data trafik & foto lokasi tanpa CCTV"
+            >
+              <Eye className="w-3.5 h-3.5 text-blue-600" />
+              <span>Tanpa CCTV</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('cctv')}
+              className={`px-3 py-1 rounded-full font-bold flex items-center gap-1.5 transition-all ${
+                mode === 'cctv'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-500 hover:text-slate-900'
+              }`}
+              title="Demo versi CCTV: dilengkapi simulasi live edge AI camera"
+            >
+              <Scan className="w-3.5 h-3.5" />
+              <span>Dengan CCTV AI</span>
+            </button>
           </div>
 
           {/* City Filter Dropdown Pill */}
@@ -86,7 +115,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               P
             </div>
             <div className="text-left">
-              <div className="text-[10px] text-slate-400 leading-none">Peran Aktif</div>
+              <div className="text-[10px] text-slate-400 leading-none">Pengguna Aktif</div>
               <div className="text-xs font-bold text-slate-800 leading-tight">Pradana (Owner)</div>
             </div>
           </div>

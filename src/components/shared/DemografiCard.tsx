@@ -1,7 +1,7 @@
 import React from 'react';
 import { Demografi } from '../../types';
 import { Card } from './Card';
-import { Users, Building2, Wallet, MapPin, Sparkles } from 'lucide-react';
+import { Users, Building2, Wallet, MapPin } from 'lucide-react';
 
 export interface DemografiCardProps {
   demografi: Demografi;
@@ -174,7 +174,6 @@ export const DemografiCard: React.FC<DemografiCardProps> = ({
                 key={idx}
                 className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200/60 transition-colors"
               >
-                <Sparkles className="w-3 h-3 text-amber-500" />
                 {poi}
               </span>
             ))}

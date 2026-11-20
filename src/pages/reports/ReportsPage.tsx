@@ -8,7 +8,6 @@ import {
   Info, 
   Clock, 
   CheckCircle2, 
-  Sparkles, 
   FileSpreadsheet, 
   Layers, 
   Building2, 
@@ -301,7 +300,6 @@ export const ReportsPage: React.FC = () => {
             onClick={() => setIsConfigModalOpen(true)}
             className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm shadow-blue-500/20 flex items-center gap-2 transition-all cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5" />
             Buat Laporan Kustom
           </button>
         </div>
@@ -452,7 +450,7 @@ export const ReportsPage: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3 w-full md:w-auto">
             <span className="p-2 rounded-xl bg-indigo-50 text-indigo-600 shrink-0">
-              <Sparkles className="w-4 h-4" />
+              <Download className="w-4 h-4" />
             </span>
             <div>
               <div className="text-xs font-bold text-slate-900">Export Spotlight Per-Billboard</div>
